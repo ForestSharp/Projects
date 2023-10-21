@@ -3,14 +3,8 @@
 namespace LibLAS
 {
     public class LasFile
-    {
-        
+    {      
         public string FilePath { get; }
-
-        public double InitialDepth;
-        public double FinalDepth;
-        public double StepDepth;
-        public double NullInformation;
 
         public BlockData[] BlockDataLAS;
         public Measurement[] ASCII_LogInfo;
@@ -102,11 +96,32 @@ namespace LibLAS
         /// <param name="strings">Блоки содержащие информацию</param>
         /// <param name="blockIndex">Индекс необходимого блока</param>
         /// <returns>Возвращает массив необходимого блока с информацией</returns>
-        private static string[] GetBlockInformation(string[] strings, int blockIndex)
+        private static InformationWell[] GetBlockInformation(string[] strings, int blockIndex)
         {
-            var blockInformation = strings.Skip(blockIndex + 1).SkipWhile(character => character[0] == '#').TakeWhile(character => Check(character, strings[^1]));
+            var blockInformation = strings.Skip(blockIndex + 1).SkipWhile(character => character[0] == '#').TakeWhile(character => Check(character, strings[^1])).ToArray();
 
-            return blockInformation.ToArray();
+            InformationWell[] informationWells = new InformationWell[blockInformation.Length];
+
+            for (int i=0; i<blockInformation.Length; i++)
+                informationWells[i] = FillInformationWell(blockInformation[i]);
+
+            return informationWells;
+        }
+
+        /// <summary>
+        /// Обработать информацию
+        /// </summary>
+        /// <param name="blockInformation">строка с информацией из блока</param>
+        /// <returns>Возвращает обработанную информацию</returns>
+        private static InformationWell FillInformationWell(string blockInformation)
+        {
+            blockInformation = blockInformation.Remove(blockInformation.IndexOf(':'));
+
+            string name = blockInformation[..(int)(blockInformation.Length / 2)].Trim();
+            string value = blockInformation[(int)(blockInformation.Length / 2)..].Trim();
+
+            InformationWell informationWell = new InformationWell(name, value);
+            return informationWell;
         }
 
         /// <summary>
@@ -164,10 +179,6 @@ namespace LibLAS
                     Data = GetBlockInformation(stringsInformationLAS, Array.IndexOf(tempLowerStrings, NameBlocks[i]))
                 };
             }
-
-            for (int i = 0; i < BlockDataLAS.Length; i++)
-                for (int j = 0; j < BlockDataLAS[i].Data.Length; j++)
-                    BlockDataLAS[i].Data[j] = BlockDataLAS[i].Data[j][..BlockDataLAS[i].Data[j].IndexOf(':')].Trim();
         }
 
         /// <summary>
@@ -177,12 +188,6 @@ namespace LibLAS
         {
             if (CheckingTheCorrectnessOfTheDepthRecording())
                 ExpandValuesInAnArray();
-
-            InitialDepth = ASCII_LogInfo[0].ValueOfMeasurements[0];
-            FinalDepth = ASCII_LogInfo[0].ValueOfMeasurements[^1];
-            StepDepth = (FinalDepth - InitialDepth) / (ASCII_LogInfo[0].ValueOfMeasurements.Length - 1);
-
-            _ = double.TryParse(BlockDataLAS[1].Data[3][5..].Trim().Replace('.', ','), out NullInformation);
         }
 
         /// <summary>
@@ -215,7 +220,7 @@ namespace LibLAS
             ASCII_LogInfo = new Measurement[BlockDataLAS[2].Data.Length];
 
             for (int i = 0; i < ASCII_LogInfo.Length; i++)
-                ASCII_LogInfo[i] = new Measurement(BlockDataLAS[2].Data[i]);
+                ASCII_LogInfo[i] = new Measurement(BlockDataLAS[2].Data[i].Name);
         }
 
         /// <summary>
@@ -289,9 +294,21 @@ namespace LibLAS
         public class BlockData
         {
             public readonly string Name;
-            public string[] Data;
+            public InformationWell[] Data;
 
-            internal BlockData(string name) => Name = name;
+            public BlockData(string name) => Name = name;
+        }
+
+        public class InformationWell 
+        {
+            public string Name { get; }
+            public string Value { get; }
+
+            public InformationWell(string name, string value)
+            {
+                Name = name;
+                Value = value;
+            }
         }
     }
 }
