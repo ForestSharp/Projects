@@ -5,8 +5,6 @@ VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VMW", "VMW.csproj", "{745A7025-37EF-4751-8D3F-B40FAB5A5683}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibLAS", "..\LibLAS\LibLAS.csproj", "{877EC85E-609A-481B-A807-53ACE707B753}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,10 +15,6 @@ Global
 		{745A7025-37EF-4751-8D3F-B40FAB5A5683}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{745A7025-37EF-4751-8D3F-B40FAB5A5683}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{745A7025-37EF-4751-8D3F-B40FAB5A5683}.Release|Any CPU.Build.0 = Release|Any CPU
-		{877EC85E-609A-481B-A807-53ACE707B753}.Debug|Any CPU.ActiveCfg = Release|Any CPU
-		{877EC85E-609A-481B-A807-53ACE707B753}.Debug|Any CPU.Build.0 = Release|Any CPU
-		{877EC85E-609A-481B-A807-53ACE707B753}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{877EC85E-609A-481B-A807-53ACE707B753}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

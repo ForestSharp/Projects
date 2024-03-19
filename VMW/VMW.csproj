@@ -9,6 +9,11 @@
 
   <ItemGroup>
     <None Remove="Resources\Diameters.dat" />
+    <None Remove="Resources\LoadFile.png" />
+    <None Remove="Resources\pngwing.png" />
+    <None Remove="Resources\Triangle.png" />
+    <None Remove="Resources\WithoutCentering.png" />
+    <None Remove="Resources\Сentering.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,16 +23,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LibLAS\LibLAS.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Model\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="OpenTK" Version="4.8.1" />
+    <PackageReference Include="OpenTK" Version="4.8.2" />
     <PackageReference Include="OpenTK.GLWpfControl" Version="4.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\LoadFile.png" />
+    <Resource Include="Resources\Triangle.png" />
+    <Resource Include="Resources\WithoutCentering.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Сentering.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>
@@ -45,6 +53,15 @@
       <LastGenOutput>ValuesOfWellDiameters.Designer.cs</LastGenOutput>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Shaders\lighting.frag">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Shaders\vertex.vert">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
