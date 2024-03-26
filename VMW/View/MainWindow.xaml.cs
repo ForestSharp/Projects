@@ -1,5 +1,4 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Windows;
 using System.Collections.ObjectModel;
 using OpenTK.Wpf;
@@ -7,7 +6,7 @@ using OpenTK.Mathematics;
 using System.Diagnostics;
 using VMW.Model;
 using VMW.ViewModel;
-using System.Windows.Input;
+
 
 /* формула нахожения координаты:
  * х = центр окружности + радиус окружности * cos угла поворота
@@ -52,15 +51,6 @@ namespace VMW
             }
         }
 
-        private void SelectDiameter_Click(object sender, RoutedEventArgs e)
-        {
-            WindowSelectBoreholeDiameters windowSelectDiameter = new();
-            windowSelectDiameter.ShowDialog();
-
-            SelectedDiameter.Clear();
-            SelectedDiameter.Add((string)windowSelectDiameter.ViewSelectDiameters.SelectedItem);
-        }
-
         private void OpenTkControl_OnRender(TimeSpan delta)
         {
             if (!_initializeGrapgicCore)
@@ -71,7 +61,6 @@ namespace VMW
 
             Title = $"Объёмное моделирование скважины fps: {10000000 / delta.Ticks}";
             GraphicCore.ToRender();
-
         }
 
         private void OpenTkControl_Loaded(object sender, RoutedEventArgs e)
@@ -156,20 +145,6 @@ namespace VMW
 
             //GraphicCore.ClearRenderObject();
             //GraphicCore.LoadRenderObject(borehole.Vertices, borehole.Indices);
-        }
-
-        private void TextBoxDrawingLength_DragEnter(object sender, DragEventArgs e)
-        {
-
-        }
-
-        private void TextBoxDrawingLength_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-            if(e.Key == System.Windows.Input.Key.Enter)
-            {
-                TextBoxDrawingLength.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
-                
-            }
         }
     }
 }

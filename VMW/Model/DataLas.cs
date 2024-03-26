@@ -87,11 +87,13 @@ namespace VMW.Model
             return $"{_name}: {_value} описание: {_description}";
         }
 
+        #region методы Get
         public string GetValue() => _value;
 
         public string GetDescription() => _description;
 
         public string GetName() => _name;
+        #endregion
     }
 
     public struct Measurements

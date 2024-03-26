@@ -14,6 +14,7 @@ namespace VMW.ViewModel
         public event PropertyChangedEventHandler? PropertyChanged;
 
         DataLas DataLas { get; set; }
+        
 
         private int _drawingLenght = 100;       
         private double _depth;
@@ -21,6 +22,9 @@ namespace VMW.ViewModel
         private double _maxDepth;
         private double _minValue;
         private double _maxValue;
+
+        private double innerDiameter;
+        private double outerDiameter;
 
         public int DrawingLenght
         {
@@ -72,7 +76,6 @@ namespace VMW.ViewModel
         public double MaxValue
         {
             get => _maxValue;
-
             set
             {
                 _maxValue = value;
@@ -80,9 +83,27 @@ namespace VMW.ViewModel
             }
         }
 
+        public double InnerDiameter { 
+            get => innerDiameter;
+            set 
+            { 
+                innerDiameter = value;
+                OnPropertyChanged("InnerDiameter");
+            } 
+        }
+        public double OuterDiameter { 
+            get => outerDiameter;
+            set
+            {
+                outerDiameter = value;
+                OnPropertyChanged("OuterDiameter");
+            }
+        }
+
         public ICommand ReadLas {  get; set; }
         public ICommand UpButtonDrawing { get; set; }
         public ICommand DownButtonDrawing { get; set; }
+        public ICommand SelectDiameters { get; set; }
 
         internal MainViewModel()
         {
@@ -106,6 +127,22 @@ namespace VMW.ViewModel
             });        
             UpButtonDrawing = new MainCommand(_ =>  DrawingLenght += 10);
             DownButtonDrawing = new MainCommand(_ => DrawingLenght -= 10);
+            SelectDiameters = new MainCommand(_ =>
+            {
+
+                WindowSelectBoreholeDiameters WindowSelectDiameters = new();
+                    foreach(var window in App.Current.Windows)
+                        if (window is MainWindow)
+                            WindowSelectDiameters.Owner = (Window)window;
+
+                WindowSelectDiameters.ShowDialog();
+
+                if (WindowSelectDiameters.Diameters is null)
+                    return;
+
+                InnerDiameter = WindowSelectDiameters.Diameters.InnerDiameter;
+                OuterDiameter = WindowSelectDiameters.Diameters.OuterDiameter;
+            });
 
         }
 
@@ -115,9 +152,9 @@ namespace VMW.ViewModel
             double.TryParse(DataLas.Well.Find(x => x.Name == "STOP.M").GetValue().Replace('.', ','), out double second);
 
             MinValue = double.Min(first, second);
-            _maxDepth = double.Max(first, second);
-
             Depth = MinValue;
+
+            _maxDepth = double.Max(first, second);           
             MaxValue = _maxDepth - DrawingLenght;
         }
 

@@ -5,15 +5,22 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VMW"
         mc:Ignorable="d"
-        Title="Диаметры колонны" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" SizeToContent="WidthAndHeight" MaxWidth="250" MaxHeight="300">
+        Title="Диаметры колонны" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" SizeToContent="WidthAndHeight" MaxWidth="250" MaxHeight="300" WindowStyle="None" Topmost="True">
     
-    <Grid x:Name="grid" Width="200">
+    <Grid x:Name="grid" Margin="0,0,0,2" Height="300">
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <ListView x:Name="ViewSelectDiameters"/>
-        <Button x:Name="ButtonSelect" Content="Выбрать" HorizontalAlignment="Left" Grid.Row="1" VerticalAlignment="Top" IsDefault="True" Width="{Binding ActualWidth, ElementName=grid, Mode=OneWay}" Height="20" Click="ButtonSelect_Click"/>
+        <ListView x:Name="ViewSelectDiameters" Margin="0,0,0,1" ScrollViewer.VerticalScrollBarVisibility="Disabled" ItemsSource="{Binding DiametersWell}" Height="271">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Внешний диаметр" Width="120" DisplayMemberBinding="{Binding Path=OuterDiameter}"/>
+                    <GridViewColumn Header="Внутренний диаметр" Width="120" DisplayMemberBinding="{Binding Path=InnerDiameter}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Button x:Name="ButtonSelect" Content="Выбрать" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Center" IsDefault="True" Height="20" Click="ButtonSelect_Click" Width="50" Margin="0,0,0,1"/>
 
     </Grid>
 </Window>

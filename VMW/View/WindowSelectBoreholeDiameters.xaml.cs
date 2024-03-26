@@ -1,43 +1,54 @@
-﻿using System.Collections.ObjectModel;
-using System.IO;
-using System.IO.Packaging;
-using System.Linq.Expressions;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Controls;
+using VMW.Model;
 using VMW.Resources;
+using VMW.ViewModel;
 
 namespace VMW
 {
     /// <summary>
     /// Логика взаимодействия для WindowSelectBoreholeDiameters.xaml
     /// </summary>
-    public partial class WindowSelectBoreholeDiameters : Window
+    partial class WindowSelectBoreholeDiameters : Window
     {
-        string[] Diameter { get; set; }
-
+        List<DiametersWell> DiametersWell {
+            get => diametersWell;
+            set => diametersWell = value;
+        }
         ObservableCollection<string>BoreholeDiameters = new ObservableCollection<string>();
+        private List<DiametersWell> diametersWell = new();
 
-        public WindowSelectBoreholeDiameters()
+        internal WindowSelectBoreholeDiameters()
         {
             InitializeComponent();
+            ViewSelectDiameters.ItemsSource = DiametersWell;
             ReadingDiameters();
-            ViewSelectDiameters.ItemsSource = Diameter;
+            
         }
 
         private void ReadingDiameters()
-        { 
+        {
+             
+
             var file = ValuesOfWellDiameters.Diameters;
+            var delete = "~Diameters\r\n".ToCharArray();
+            var resultDiameters = file.Trim(delete).Replace("\r\n", ";").Replace('.', ',').Split(';');
+            double[][] diameters = new double[resultDiameters.Length/2][];
 
-            int index = file.LastIndexOf("~Diameters");
-
-            if (index == -1)
-                return;
-
-            Diameter = file.Substring(10).Trim('\r','\n').Split("\r\n");
+            for (int i = 0, k = 1; i < resultDiameters.Length; i += 2, k += 2)
+                if(double.TryParse(resultDiameters[i], out double resultOuterDiameter) && double.TryParse(resultDiameters[k], out double resultInnerDiameter))
+                    diametersWell.Add(new(double.Min(resultInnerDiameter, resultOuterDiameter), double.Max(resultInnerDiameter, resultOuterDiameter)));
+            
         }
 
         private void ButtonSelect_Click(object sender, RoutedEventArgs e)
         {
-            Close();
+            this.DialogResult = true;
         }
+
+        internal DiametersWell Diameters { get { return (DiametersWell)ViewSelectDiameters.SelectedItem; }  }
     }
 }
